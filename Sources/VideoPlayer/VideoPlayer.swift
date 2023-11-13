@@ -95,7 +95,8 @@ public extension VideoPlayer {
         var mute: Bool = false
         var speedRate: Float = 1.0
         var contentMode: UIView.ContentMode = .scaleToFill
-        
+        var avPlayer: AVPlayer? = nil
+
         var handler: Handler = Handler()
     }
     
@@ -156,7 +157,13 @@ public extension VideoPlayer {
         view.config.handler.onStateChanged = handler
         return view
     }
-    
+
+    func onAVPlayer(_ value: AVPlayer?) -> Self {
+        var view = self
+        view.config.avPlayer = value
+        return view
+    }
+
 }
 
 @available(iOS 13, *)
@@ -209,7 +216,8 @@ extension VideoPlayer: UIViewRepresentable {
         uiView.isMuted = config.mute
         uiView.isAutoReplay = config.autoReplay
         uiView.speedRate = config.speedRate
-        
+        uiView.player = config.avPlayer
+
         if let observerTime = context.coordinator.observerTime, time != observerTime {
             uiView.seek(to: time, toleranceBefore: time, toleranceAfter: time, completion: { _ in })
         }
